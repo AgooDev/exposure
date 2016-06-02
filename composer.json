@@ -1,6 +1,5 @@
 {
     "require": {
-        "slim/slim": "^3.0",
-        "propel/propel": "~2.0@dev"
+        "slim/slim": "^3.0"
     }
 }
