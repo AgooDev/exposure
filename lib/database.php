@@ -6,7 +6,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree or translated in the assets folder.
  */
-require_once "../config/config.php";
 
 class Database{
 
@@ -27,6 +26,22 @@ class Database{
             //echo "Connection is ok ";
         }
     }// End of constructor
+
+
+
+
+    //Fetch data by accepting table name and columns(1 dimentional array) name
+    public function fetch($table, array $columns, $where){
+        $columns = implode(",",$columns);
+        $sql = "SELECT $columns FROM $table WHERE $where";
+        $result = $this->connection->query($sql);
+        if($this->connection->errno){
+            die("Fail Select ".$this->connection->error);
+        }
+
+        //return tow dimentional array as required columns result
+        return $result->fetch_assoc();
+    }
 
 
 
@@ -113,10 +128,10 @@ class Database{
         //Update operation
         if($this->connection->query("UPDATE $tblname SET $Stset WHERE $Stcod") === TRUE){
             if(mysqli_affected_rows($this->connection)){
-                echo "Record updated successfully<br>";
+                //echo "Record updated successfully<br>";
             }
             else{
-                echo "The Record you want to updated is no loger exists<br>";
+                //echo "The Record you want to updated is no loger exists<br>";
             }
         }else{
             echo "Error to update".$this->connection->error;
