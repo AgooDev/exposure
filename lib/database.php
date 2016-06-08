@@ -43,7 +43,21 @@ class Database{
         return $result->fetch_assoc();
     }
 
-
+    //Multiple rows
+    public function fetchMultiple($table, array $columns, $where){
+        $columns = implode(",",$columns);
+        $sql = "SELECT $columns FROM $table WHERE $where";
+        $result = $this->connection->query($sql);
+        if($this->connection->errno){
+            die("Fail Select ".$this->connection->error);
+        }
+        $rows = array();
+        while($row = $result->fetch_row()) {
+            $rows[]=$row;
+        }
+        //return tow dimentional array as required columns result
+        return $rows;
+    }
 
 
     # Insert Data within table by accepting TableName and Table column => Data as associative array
