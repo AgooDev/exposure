@@ -1,7 +1,4 @@
 <?php
-
-namespace Exposure\Libs;
-
 /**
  * Portable PHP password hashing framework.
  * @package phpass
