@@ -59,6 +59,22 @@ class Database{
         return $rows;
     }
 
+    //Multiple rows
+    public function fetchMultipleType($table, $type, array $columns, $where){
+        $columns = implode(",",$columns);
+        $sql = "SELECT $type $columns FROM $table WHERE $where";
+        $result = $this->connection->query($sql);
+        if($this->connection->errno){
+            die("Fail Select ".$this->connection->error);
+        }
+        $rows = array();
+        while($row = $result->fetch_row()) {
+            $rows[]=$row;
+        }
+        //return tow dimentional array as required columns result
+        return $rows;
+    }
+
 
     # Insert Data within table by accepting TableName and Table column => Data as associative array
     public function insert($tblname, array $val_cols){
