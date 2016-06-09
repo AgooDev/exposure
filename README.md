@@ -13,6 +13,12 @@ Microservice to exposure the basic function from legacy code
 
 /email/recovery
 
+```
+{
+    "email":"my@email.com"
+}
+```
+
 /modules
 
 ```
@@ -22,7 +28,13 @@ Microservice to exposure the basic function from legacy code
 ```
 
 /recovery
-/users/videos
+
+```
+{
+    "email":"my@email.com"
+}
+```
+
 /videos
 
 ```
