@@ -6,8 +6,8 @@ Microservice to exposure the basic function from legacy code
 
 ```
 {
-    "email":"my@email.com",
-    "password":"1f u c4n r34d th1s u r34lly n33d t0 g37 l41d"
+    "email"     : "my@email.com",
+    "password"  : "1f u c4n r34d th1s u r34lly n33d t0 g37 l41d"
 }
 ```
 
@@ -17,10 +17,17 @@ Microservice to exposure the basic function from legacy code
 
 ```
 {
-    "email":"my@email.com",
+    "email" : "my@email.com",
 }
 ```
 
 /recovery
 /users/videos
 /videos
+
+```
+{
+    "email"     : "my@email.com",
+    "moduleId"  : 1
+}
+```

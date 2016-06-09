@@ -113,7 +113,7 @@ $app->post('/modules', function ($request, $response){
         $state = false;
     }
 
-    # Now get the list of available videos for this user
+    # Now get the list of available modules for this user
     $where = "se_factura.idusuario = " . $user["ID"];
     $columns = array(
         "se_modulos.id",
@@ -181,6 +181,52 @@ $app->get('/videos', function ($request, $response, $args) {
     return $response;
 });
 
+$app->post('/videos', function ($request, $response){
+    # Get body data
+    $data = $request->getParsedBody();
 
+    # Email Variables
+    # postData
+    $email      = filter_var($data['email'],    FILTER_SANITIZE_EMAIL);
+    $messageResult = "";
+    $state = false;
+
+    # Create a MySQL connecton
+    $db = new Database();
+    # Check if email exists like user
+    $columns = array(
+        "ID",
+        "user_login",
+        "display_name"
+    );
+    $where = "user_login = '$email'";
+    $user = $db->fetch('wp_users', $columns, $where);
+    if($user["user_login"] === $email) {
+        $messageResult = "Welcome " . $user["display_name"];
+        $state = true;
+    } else {
+        $messageResult = "Error invalid username or incorrect password";
+    }
+
+    # Now get the list of available videos for this user
+    $where = "idusuario = " . $user["ID"];
+    $columns = array(
+        "ID",
+        "user_login",
+        "display_name"
+    );
+    $videos = $db->fetch('se_videosusuarios', $columns, $where);
+    unset($db);
+
+    $data = array(
+        "result"    => $state,
+        "id"        => $user["ID"],
+        "email"     => $user["user_login"],
+        "name"      => $user["display_name"],
+        "message"   => $messageResult
+    );
+
+    $response->withJson($data);
+});
 
 $app->run();
