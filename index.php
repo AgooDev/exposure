@@ -180,6 +180,7 @@ $app->post('/videos', function ($request, $response){
     # Email Variables
     # postData
     $email      = filter_var($data['email'],    FILTER_SANITIZE_EMAIL);
+    $moduleId     = $data['moduleId'];
     $messageResult = "";
     $state = false;
 
@@ -198,27 +199,50 @@ $app->post('/videos', function ($request, $response){
         $state = true;
     } else {
         $messageResult = "Error invalid username or incorrect password";
+        $state = false;
     }
 
     # Now get the list of available videos for this user
-    $where = "idusuario = " . $user["ID"];
+    $where = "se_videosusuarios.idusuario = " . $user["ID"] . " AND se_videos.idmodulo = " . $moduleId;
     $columns = array(
-        "ID",
-        "user_login",
-        "display_name"
+        "se_videosusuarios.id",
+        "se_videos.nombre",
+        "se_videos.idorden AS OrdenGeneral",
+        "se_videosusuarios.idorden AS OrdenUsuario",
+        "se_videosusuarios.idvideos",
+        "se_videosusuarios.habilitado",
+        "se_videos.enlace",
+        "se_videos.idmodulo",
     );
-    $videos = $db->fetch('se_videosusuarios', $columns, $where);
+    $videos = $db->fetchMultipleType('se_videos INNER JOIN se_videosusuarios ON se_videos.id = se_videosusuarios.idvideos',
+        " DISTINCT ",$columns, $where);
+    $final = array();
+
+    foreach ($videos as $row){
+        if($row[7] == $moduleId) {
+            $state = true;
+        } else {
+            $messageResult = "Error list of modules not found";
+            $state = false;
+        }
+
+        $data = array(
+            "result"        => $state,
+            "id"            => $row[0],
+            "name"          => $row[1],
+            "mainOrder"     => $row[2],
+            "userOrder"     => $row[2],
+            "videosId"      => $row[4],
+            "available"     => $row[5],
+            "link"          => $row[5],
+            "moduleId"      => $row[5],
+            "message"       => $messageResult
+        );
+        array_push($final, $data);
+    }
     unset($db);
 
-    $data = array(
-        "result"    => $state,
-        "id"        => $user["ID"],
-        "email"     => $user["user_login"],
-        "name"      => $user["display_name"],
-        "message"   => $messageResult
-    );
-
-    $response->withJson($data);
+    $response->withJson($final);
 });
 
 $app->run();
