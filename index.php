@@ -167,14 +167,6 @@ $app->get('/recovery', function ($request, $response, $args) {
 
 
 // ================================================================
-// USER VIDEOS
-$app->get('/users/videos', function ($request, $response, $args) {
-    $response->getBody()->write("User Videos");
-    return $response;
-});
-
-
-// ================================================================
 // VIDEOS
 $app->get('/videos', function ($request, $response, $args) {
     $response->getBody()->write("Videos");
